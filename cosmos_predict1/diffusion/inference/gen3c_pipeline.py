@@ -246,7 +246,7 @@ class Gen3cPipeline(DiffusionVideo2WorldGenerationPipeline):
         # Generate video frames
         video = generate_world_from_video(
             model=self.model,
-            state_shape=self.model.state_shape,
+            state_shape=state_shape,
             is_negative_prompt=True,
             data_batch=data_batch,
             guidance=self.guidance,

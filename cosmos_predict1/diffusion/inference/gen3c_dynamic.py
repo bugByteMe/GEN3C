@@ -197,28 +197,28 @@ def demo(args):
             continue
 
         try:
-            if args.vipe_path is not None:
-                (
-                    image_bchw_float,
-                    depth_b1hw,
-                    mask_b1hw,
-                    initial_w2c_b44,
-                    intrinsics_b33,
-                ) = load_vipe_data(
-                    vipe_root_or_mp4=args.vipe_path,
-                    starting_frame_idx=args.vipe_starting_frame_idx,
-                    resize_hw=(720, 1280),
-                    crop_hw=(704, 1280),
-                    num_frames=args.num_video_frames,
-                )
-            else:
-                (
-                    image_bchw_float,
-                    depth_b1hw,
-                    mask_b1hw,
-                    initial_w2c_b44,
-                    intrinsics_b33,
-                ) = load_data_auto_detect(current_video_path)
+            # if args.vipe_path is not None:
+            #     (
+            #         image_bchw_float,
+            #         depth_b1hw,
+            #         mask_b1hw,
+            #         initial_w2c_b44,
+            #         intrinsics_b33,
+            #     ) = load_vipe_data(
+            #         vipe_root_or_mp4=args.vipe_path,
+            #         starting_frame_idx=args.vipe_starting_frame_idx,
+            #         resize_hw=(720, 1280),
+            #         crop_hw=(704, 1280),
+            #         num_frames=args.num_video_frames,
+            #     )
+            # else:
+            (
+                image_bchw_float,
+                depth_b1hw,
+                mask_b1hw,
+                initial_w2c_b44,
+                intrinsics_b33,
+            ) = load_data_auto_detect(current_video_path)
         except Exception as e:
             log.critical(f"Failed to load visual input from {current_video_path}: {e}")
             continue
@@ -255,6 +255,8 @@ def demo(args):
                 center_depth=1.0,
                 device=device.type,
             )
+            torch.save({'w2c': generated_w2cs.cpu(), 'intrinsics': generated_intrinsics.cpu()}, 
+                       os.path.join(args.video_save_folder, 'trajec.pt'))
         except (ValueError, NotImplementedError) as e:
             log.critical(f"Failed to generate trajectory: {e}")
             continue
