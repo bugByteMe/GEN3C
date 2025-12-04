@@ -53,20 +53,22 @@ def create_horizontal_trajectory(
     trajectory = []
     translation_positions = []
     initial_camera_pos = torch.tensor([0, 0, 0], device=device)
-
+    
+    pre_step = 10.0
     for i in range(n_steps):
+        ratio = 1 if i >= pre_step else i / pre_step
         if axis == "x": # pos - right
-            x = i * distance * center_depth / n_steps * (1 if positive else -1)
+            x = ratio * distance * center_depth * (1 if positive else -1)
             y = 0
             z = 0
         elif axis == "y": # pos - down
             x = 0
-            y = i * distance * center_depth / n_steps * (1 if positive else -1)
+            y = ratio * distance * center_depth * (1 if positive else -1)
             z = 0
         elif axis == "z": # pos - in
             x = 0
             y = 0
-            z = i * distance * center_depth / n_steps * (1 if positive else -1)
+            z = ratio * distance * center_depth * (1 if positive else -1)
         else:
             raise ValueError("Axis should be x, y or z")
 
